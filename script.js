@@ -8,17 +8,15 @@ let shiftY = 0;
 items.forEach((item) => {
   item.addEventListener('mousedown', (e) => {
     activeItem = item;
-
     const itemRect = item.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
     shiftX = e.clientX - itemRect.left;
     shiftY = e.clientY - itemRect.top;
 
-    // Switch to absolute positioning dynamically on drag start
     if (item.style.position !== 'absolute') {
-      const initialLeft = itemRect.left - containerRect.left + container.scrollLeft;
-      const initialTop = itemRect.top - containerRect.top + container.scrollTop;
+      const initialLeft = itemRect.left - containerRect.left;
+      const initialTop = itemRect.top - containerRect.top;
       item.style.width = `${item.offsetWidth}px`;
       item.style.height = `${item.offsetHeight}px`;
       item.style.position = 'absolute';
@@ -36,25 +34,24 @@ document.addEventListener('mousemove', (e) => {
 
   const containerRect = container.getBoundingClientRect();
 
-  // Position relative to container
-  let newLeft = e.clientX - containerRect.left - shiftX;
-  let newTop = e.clientY - containerRect.top - shiftY;
+  let left = e.clientX - containerRect.left - shiftX;
+  let top = e.clientY - containerRect.top - shiftY;
 
-  // Enforce boundary constraints inside container
+  // Keep within bounds
   const maxLeft = container.clientWidth - activeItem.offsetWidth;
   const maxTop = container.clientHeight - activeItem.offsetHeight;
 
-  newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-  newTop = Math.max(0, Math.min(newTop, maxTop));
+  left = Math.max(0, Math.min(left, maxLeft));
+  top = Math.max(0, Math.min(top, maxTop));
 
-  activeItem.style.left = `${newLeft}px`;
-  activeItem.style.top = `${newTop}px`;
+  activeItem.style.left = `${left}px`;
+  activeItem.style.top = `${top}px`;
 });
 
 document.addEventListener('mouseup', () => {
-  if (!activeItem) return;
-
-  activeItem.style.cursor = 'grab';
-  activeItem.style.zIndex = '';
-  activeItem = null;
+  if (activeItem) {
+    activeItem.style.cursor = 'grab';
+    activeItem.style.zIndex = '';
+    activeItem = null;
+  }
 });

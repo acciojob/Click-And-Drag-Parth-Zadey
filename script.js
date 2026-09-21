@@ -19,6 +19,8 @@ items.forEach((item) => {
     if (item.style.position !== 'absolute') {
       const initialLeft = itemRect.left - containerRect.left + container.scrollLeft;
       const initialTop = itemRect.top - containerRect.top + container.scrollTop;
+      item.style.width = `${item.offsetWidth}px`;
+      item.style.height = `${item.offsetHeight}px`;
       item.style.position = 'absolute';
       item.style.left = `${initialLeft}px`;
       item.style.top = `${initialTop}px`;
